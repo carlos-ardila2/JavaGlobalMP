@@ -1,0 +1,63 @@
+/* Basic styling */
+
+table {
+    border-collapse: collapse;
+}
+
+table.inner {
+    margin-top: 0.5rem;
+}
+
+header {
+    padding-bottom : 0;
+}
+
+nav {
+    margin-bottom: 0;
+    background-color: var(--color-bg-secondary);
+}
+
+td.text-content {
+    max-width: 24rem;
+    white-space: normal;
+    text-align: var(--justify-normal);
+}
+
+td.expandable {
+    padding-bottom: 0;
+    padding-top: 0;
+    line-height: 1;
+}
+
+a.delete {
+    color: red;
+}
+
+a.spaced {
+    margin-left: 1.25rem;
+}
+
+section.button-bar {
+    justify-content: space-evenly;
+}
+
+section.title {
+    display: ruby-text;
+}
+
+section.title > h1 {
+    font-size: 2em;
+}
+
+div.below {
+    height: 4.5rem;
+    align-content: center;
+}
+
+li.logout {
+    margin-left: 1.6rem;
+}
+
+li.logout > a {
+    color: #777;
+}

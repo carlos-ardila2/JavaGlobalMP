@@ -1,0 +1,20 @@
+global:
+  scrape_interval: 60s
+scrape_configs:
+  - job_name: 'spring'
+    metrics_path: 'actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8080']
+    #basic_auth:
+    #  username: 'admin'
+    #  password: 'pass'
+    oauth2:
+      client_id: 'admin'
+      client_secret: 'pass'
+      scopes: ['ROLE_USER']
+      token_url: 'http://admin:pass@host.docker.internal:8080/oauth/token'
+
+  - job_name: 'prometheus'
+    scrape_interval: 10s
+    static_configs:
+      - targets: ['localhost:9090']

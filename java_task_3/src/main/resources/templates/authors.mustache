@@ -1,0 +1,77 @@
+{{>header}}
+<main>
+  <h1>Authors</h1>
+  <table>
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Books</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#authorList}}
+      <tr>
+        <td>{{name}}</td>
+        <td>{{bookCount}}</td>
+        <td>
+          <a id="open-edit-dialog" class="open-dialog" href="/api/authors/{{id}}">Edit</a>
+          <a id="open-delete-dialog" class="spaced delete open-dialog" href="/api/authors/{{id}}">Delete</a>
+        </td>
+      </tr>
+      {{#booksPresent}}
+      <tr>
+        <td class="expandable" colspan="3">
+          <details>
+            <summary>
+              Books
+            </summary>
+            <table class="inner">
+              <thead>
+              <tr>
+                <th>Title</th>
+                <th>Published Date</th>
+                <th>Chapters</th>
+                <th>Reviews</th>
+              </tr>
+              </thead>
+              <tbody>
+              {{#books}}
+                <tr>
+                  <td>{{title}}</td>
+                  <td>{{publishedDate}}</td>
+                  <td><pre>{{chaptersTitles}}</pre></td>
+                  <td>{{reviewCount}}</td>
+                </tr>
+              {{/books}}
+              </tbody>
+            </table>
+          </details>
+        </td>
+      </tr>
+      {{/booksPresent}}
+    {{/authorList}}
+    </tbody>
+  </table>
+  <div class="below"><a id="open-add-dialog" class="open-dialog" href="/api/authors"><em>Add Author</em></a></div>
+</main>
+<dialog id="add-dialog">
+  <form id="add-dialog-form" method="dialog">
+    <label for="author-name">Author name and last name:</label>
+    <input type="text" id="author-name" name="name" required minlength="4" maxlength="30" size="10" />
+    <section class="button-bar">
+      <button type="submit">Add</button>
+      <button id="close-add-dialog" type="button" class="close">Cancel</button>
+    </section>
+  </form>
+</dialog>
+<dialog id="delete-dialog">
+  <form id="delete-dialog-form" method="dialog">
+    <p>Are you sure you want to delete this author?</p>
+    <section class="button-bar">
+      <button type="submit">Yes</button>
+      <button id="close-delete-dialog" type="button" class="close">No</button>
+    </section>
+  </form>
+</dialog>
+{{>footer}}

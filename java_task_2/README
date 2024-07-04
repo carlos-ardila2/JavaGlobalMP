@@ -1,0 +1,12 @@
+Homework for module Concurrency and Multithreading Architecture
+---------------------------------------------------------------
+
+https://git.epam.com/epm-cdp/global-java-foundation-program/java-modules/-/blob/master/modules/37.%20Concurrency%20and%20Multithreading%20Architecture/Homework.md
+
+Find the task in the Main.java file.
+
+Task number five benchmark results:
+
+Total operations: 100000, Elapsed time: 1245738 ms, Operations per second: 80       // No Threads
+Total operations: 100000, Elapsed time: 240193 ms, Operations per second: 416       // Single Thread
+Total operations: 100000, Elapsed time: 112649 ms, Operations per second: 888       // 10 Threads
