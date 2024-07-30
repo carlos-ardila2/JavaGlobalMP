@@ -1,10 +1,15 @@
 package com.epam.jmp;
 
 
-import com.epam.jmp.tasks.DirectoryScannerTask;
-import com.epam.jmp.tasks.FactorialTask;
-import com.epam.jmp.tasks.ForkBlurTask;
-import com.epam.jmp.tasks.MergeSortTask;
+import com.epam.jmp.akka.service.PCAssemblyService;
+import com.epam.jmp.opensalary.model.Employee;
+import com.epam.jmp.opensalary.service.EmployeeService;
+import com.epam.jmp.opensalary.service.PayRollService;
+import com.epam.jmp.tasks.*;
+import com.epam.jmp.tasks.model.blockingqueue.BlockingConsumer;
+import com.epam.jmp.tasks.model.blockingqueue.BlockingProducer;
+import com.epam.jmp.tasks.model.semaphore.Consumer;
+import com.epam.jmp.tasks.model.semaphore.Producer;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -13,9 +18,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Scanner;
-import java.util.concurrent.ForkJoinPool;
+import java.util.*;
+import java.util.concurrent.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -29,9 +33,11 @@ public class Main {
                     1. Factorial via FJP
                     2. Multithreading Sorting via FJP
                     3. File (Directory) Scanner via FJP
-                    4. Completable Future Helps to Build Open Salary Society
-                    5. Producer–Consumer Problem
-                    6. RecursiveAction
+                    41. Completable Future Helps to Build Open Salary Society
+                    42. Completable Future Helps to Build Open Salary Society (Async)
+                    51. Producer–Consumer Problem (Semaphores)
+                    52. Producer–Consumer Problem (BlockingQueue)
+                    6. Recursive Action
                     7. Blurring for Clarity
                     8. PC Assembly Line with Akka
                 :\s""";
@@ -86,13 +92,69 @@ public class Main {
                         System.out.println("ERROR: The path is not a directory.");
                     }
                 }
-                case 4 -> {
-
+                case 41 -> {
+                    long startTime = System.currentTimeMillis();
+                    PayRollService service = new PayRollService(new EmployeeService());
+                    List<Employee> employees = service.fetchHiredEmployeesWithSalaries();
+                    employees.forEach(System.out::println);
+                    long endTime = System.currentTimeMillis();
+                    System.out.println("Synchronous Payroll update took " + (endTime - startTime) + " milliseconds.");
                 }
-                case 5 -> {
+                case 42 -> {
+                    long startTime = System.currentTimeMillis();
+                    PayRollService service = new PayRollService(new EmployeeService());
+                    CompletableFuture<List<Employee>> future = service.fetchHiredEmployeesWithSalariesAsync().toCompletableFuture();
+                    future.thenAccept(employees -> employees.forEach(System.out::println)).join(); // Wait for completion
+                    long endTime = System.currentTimeMillis();
+                    System.out.println("Async Payroll update took " + (endTime - startTime) + " milliseconds.");
 
+                    // Synchronous Payroll update took 5538 milliseconds.
+                    // Async Payroll update took 1689 milliseconds.
                 }
-                case 6 -> {
+                case 51 -> {
+                    // Producer–Consumer problem with semaphores
+                    final int BUFFER_SIZE = 10;
+                    final Queue<Integer> buffer = new LinkedList<>();
+                    final Semaphore emptySlots = new Semaphore(BUFFER_SIZE);
+                    final Semaphore fullSlots = new Semaphore(0);
+                    final Semaphore mutex = new Semaphore(1);
+                    Producer producer = new Producer(buffer, mutex, emptySlots, fullSlots);
+                    Consumer consumer = new Consumer(buffer, mutex, emptySlots, fullSlots);
+                    producer.start();
+                    consumer.start();
+
+                    System.out.println("Enter any key to stop the simulation.");
+                }
+                case 52 -> {
+                    // Blocking queue solves the problem of busy waiting directly
+                    final int BUFFER_SIZE = 10;
+                    final BlockingQueue<Integer> buffer = new ArrayBlockingQueue<>(BUFFER_SIZE);
+                    BlockingProducer producer = new BlockingProducer(buffer);
+                    BlockingConsumer consumer = new BlockingConsumer(buffer);
+                    producer.start();
+                    consumer.start();
+                }
+               case 6 -> {
+                    System.out.println("Enter a number to calculate Fibonacci series: ");
+                    var number = console.nextInt();
+                    long result;
+                    try (ForkJoinPool pool = new ForkJoinPool()) {
+                        FibonacciTask task = new FibonacciTask(number);
+                        result = pool.invoke(task);
+                    }
+
+                    System.out.println("Number " + number + " of Fibonacci series is " + result);
+
+                    System.out.println("\nNOTE: Check the test output for performance comparison on the rest of the task.");
+
+                    /*
+                    [INFO]  T E S T S
+                    [INFO] -------------------------------------------------------
+                    [INFO] Running com.epam.jmp.tasks.RecursiveTasksTest
+                    LINEAR: Result: 1.6665524482327214E16 Task took 1198 milliseconds.
+                    RECURSIVE: Result: 1.6666562787758904E16 Task took 440 milliseconds.
+                    [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 71.15 s -- in com.epam.jmp.tasks.RecursiveTasksTest
+                     */
 
                 }
                 case 7 -> {
@@ -120,11 +182,11 @@ public class Main {
                         }
                     } else {
                         System.out.println("ERROR: The path is not a file.");
-
                     }
                 }
                 case 8 -> {
-
+                    PCAssemblyService service = new PCAssemblyService();
+                    service.assemblePC().thenAccept(pc -> System.out.println("PC Assembled: " + pc));
                 }
             }
         }
@@ -169,8 +231,7 @@ public class Main {
         }
         long endTime = System.currentTimeMillis();
 
-        System.out.println("Image blur took " + (endTime - startTime) +
-                " milliseconds.");
+        System.out.println("Image blur took " + (endTime - startTime) + " milliseconds.");
 
         BufferedImage dstImage =
                 new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
