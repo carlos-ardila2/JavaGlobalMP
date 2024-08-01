@@ -11,7 +11,9 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 @Test()
 public class PerformanceTest {
@@ -34,6 +36,17 @@ public class PerformanceTest {
     @OutputTimeUnit(TimeUnit.MICROSECONDS)
     public void payrollServicePerformance() {
         PCAssemblyService service = new PCAssemblyService();
-        service.assemblePC().thenAccept(pc -> System.out.println("PC Assembled: " + pc));
+
+        var results = new CompletableFuture[100];
+
+        for (int i = 0; i < 100; i++) {
+            results[i] = service.assemblePC();
+        }
+
+        Stream.of(results)
+                .map(CompletableFuture::join)
+                .forEach(pc -> System.out.println("PC Assembled: " + pc));
+
+        service.shutdown();
     }
 }
