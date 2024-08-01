@@ -67,6 +67,18 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                    <!-- Run only RecursiveTasksTest, add "performance" to run PerformanceTest and "benchmark" to run BenchmarkTest -->
+                    <groups>recursive</groups>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

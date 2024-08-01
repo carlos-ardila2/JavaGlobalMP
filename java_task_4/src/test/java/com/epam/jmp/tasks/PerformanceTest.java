@@ -1,52 +1,39 @@
 package com.epam.jmp.tasks;
 
 import com.epam.jmp.akka.service.PCAssemblyService;
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.runner.Runner;
-import org.openjdk.jmh.runner.options.Options;
-import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Test()
 public class PerformanceTest {
 
-    @Test()
-    public void runPerformanceTests() {
-        Options opt = new OptionsBuilder()
-                .include(PerformanceTest.class.getSimpleName())
-                .build();
-        try {
-            new Runner(opt).run();
-            Assert.assertTrue(true);
-        } catch (Exception e) {
-            Assert.fail("Exception was thrown!");
-        }
-    }
-
-    @Benchmark
-    @BenchmarkMode(Mode.AverageTime)
-    @OutputTimeUnit(TimeUnit.MICROSECONDS)
+    @Test(groups = "performance")
     public void payrollServicePerformance() {
         PCAssemblyService service = new PCAssemblyService();
 
-        var results = new CompletableFuture[100];
+        int goal = 84_000;
 
-        for (int i = 0; i < 100; i++) {
-            results[i] = service.assemblePC();
+        long startTime = System.currentTimeMillis();
+
+        AtomicLong counter = new AtomicLong(0);
+
+        for (int i = 0; i < goal; i++) {
+            service.assemblePC().thenApply(pc -> {
+                System.out.println("PC Assembled: " + pc);
+                counter.incrementAndGet();
+                return pc;
+            });
         }
 
-        Stream.of(results)
-                .map(CompletableFuture::join)
-                .forEach(pc -> System.out.println("PC Assembled: " + pc));
+        while (true) {
+            if (counter.get() == goal) break;
+        }
 
         service.shutdown();
+
+        long duration = System.currentTimeMillis() - startTime;
+        System.out.println("Process took " + duration + " milliseconds.");
+        Assert.assertTrue(duration < 4000);
     }
 }

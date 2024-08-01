@@ -146,16 +146,12 @@ public class Main {
                     System.out.println("Number " + number + " of Fibonacci series is " + result);
 
                     System.out.println("\nNOTE: Check the test output for performance comparison on the rest of the task.");
-
+                    
                     /*
-                    [INFO]  T E S T S
-                    [INFO] -------------------------------------------------------
-                    [INFO] Running com.epam.jmp.tasks.RecursiveTasksTest
-                    LINEAR: Result: 1.6665524482327214E16 Task took 1198 milliseconds.
-                    RECURSIVE: Result: 1.6666562787758904E16 Task took 440 milliseconds.
-                    [INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 71.15 s -- in com.epam.jmp.tasks.RecursiveTasksTest
-                     */
-
+                    Benchmark                                      Mode  Cnt    Score    Error  Units
+                    BenchmarkTest.doubleSquaresLinearBenchmark     avgt    5  484.758 ± 91.251  ms/op
+                    BenchmarkTest.doubleSquaresRecursiveBenchmark  avgt    5   78.249 ±  2.475  ms/op
+                    */
                 }
                 case 7 -> {
                     System.out.println("Enter the path of a jpg image in your file system: ");
