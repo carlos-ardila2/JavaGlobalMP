@@ -1,6 +1,5 @@
 package com.epam.jmp;
 
-
 import com.epam.jmp.akka.service.PCAssemblyService;
 import com.epam.jmp.opensalary.model.Employee;
 import com.epam.jmp.opensalary.service.EmployeeService;
@@ -20,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) {
@@ -185,8 +185,22 @@ public class Main {
                     }
                 }
                 case 8 -> {
+                    System.out.println("Enter the number PC's to assemble: ");
+                    var number = console.nextInt();
+
                     PCAssemblyService service = new PCAssemblyService();
-                    service.assemblePC().thenAccept(pc -> System.out.println("PC Assembled: " + pc));
+
+                    var results = new CompletableFuture[number];
+
+                    for (int i = 0; i < number; i++) {
+                        results[i] = service.assemblePC();
+                    }
+
+                    Stream.of(results)
+                            .map(CompletableFuture::join)
+                            .forEach(pc -> System.out.println("PC Assembled: " + pc));
+
+                    service.shutdown();
                 }
             }
         }
