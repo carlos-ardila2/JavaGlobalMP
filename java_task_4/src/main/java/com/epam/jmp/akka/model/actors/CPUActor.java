@@ -28,7 +28,7 @@ public class CPUActor extends AbstractBehavior<AssembleCommand> {
     private Behavior<AssembleCommand> onInstallCPU(AssembleCommand command) {
         PC pc = command.pc();
         pc.setCpu(CPUS[(int) Math.floor(Math.random() * CPUS.length)]);
-        getContext().getLog().info("CPU installed by {}", getContext().getSelf());
+        getContext().getLog().debug("CPU installed by {}", getContext().getSelf());
         command.replyTo().tell(new CompletedCommand(pc));
         return this;
     }

@@ -31,7 +31,7 @@ public class RAMActor extends AbstractBehavior<AssembleCommand> {
     private Behavior<AssembleCommand> onInstallRAM(AssembleCommand command) {
         PC pc = command.pc();
         pc.setRam(RAM_CONFIGS[(int) Math.floor(Math.random() * RAM_CONFIGS.length)]);
-        getContext().getLog().info("RAM memory installed by {}", getContext().getSelf());
+        getContext().getLog().debug("RAM memory installed by {}", getContext().getSelf());
         command.replyTo().tell(new CompletedCommand(pc));
         return this;
     }

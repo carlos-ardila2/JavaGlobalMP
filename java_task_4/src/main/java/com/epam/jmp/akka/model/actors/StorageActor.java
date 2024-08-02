@@ -32,7 +32,7 @@ public class StorageActor extends AbstractBehavior<AssembleCommand> {
     private Behavior<AssembleCommand> onInstallStorage(AssembleCommand command) {
         PC pc = command.pc();
         pc.setStorage(STORAGE_CONFIGS[(int) Math.floor(Math.random() * STORAGE_CONFIGS.length)]);
-        getContext().getLog().info("Storage installed by {}", getContext().getSelf());
+        getContext().getLog().debug("Storage installed by {}", getContext().getSelf());
         command.replyTo().tell(new CompletedCommand(pc));
         return this;
     }

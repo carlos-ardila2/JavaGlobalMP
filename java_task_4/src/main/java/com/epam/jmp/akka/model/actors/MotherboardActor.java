@@ -28,7 +28,7 @@ public class MotherboardActor extends AbstractBehavior<AssembleCommand> {
     private Behavior<AssembleCommand> onInstallMotherboard(AssembleCommand command) {
         PC pc = command.pc();
         pc.setMotherboard(MOTHERBOARDS[(int) Math.floor(Math.random() * MOTHERBOARDS.length)]);
-        getContext().getLog().info("Motherboard installed by {}", getContext().getSelf());
+        getContext().getLog().debug("Motherboard installed by {}", getContext().getSelf());
         command.replyTo().tell(new CompletedCommand(pc));
         return this;
     }

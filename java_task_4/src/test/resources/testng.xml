@@ -5,7 +5,8 @@
         <classes>
             <class name="com.epam.jmp.tasks.PerformanceTest"/>
             <class name="com.epam.jmp.tasks.RecursiveTasksTest"/>
-            <class name="com.epam.jmp.tasks.BenchmarkTest"/>
+            <class name="com.epam.jmp.tasks.AssemblyBenchmarkTest"/>
+            <class name="com.epam.jmp.tasks.RecursiveBenchmarkTest"/>
         </classes>
     </test>
 </suite>

@@ -13,14 +13,14 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 
 @Test()
-public class BenchmarkTest {
+public class RecursiveBenchmarkTest {
 
     @Test(groups = "benchmark")
-    public void runBenchmarkTests() {
+    public void runRecursiveBenchmarkTests() {
         Options opt = new OptionsBuilder()
-                .include(BenchmarkTest.class.getSimpleName())
+                .include(RecursiveBenchmarkTest.class.getSimpleName())
                 .forks(1)
-                //.threads(4)
+                .threads(4)
                 .warmupIterations(1)
                 .build();
         try {

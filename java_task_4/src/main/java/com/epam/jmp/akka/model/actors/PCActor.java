@@ -73,7 +73,7 @@ public class PCActor extends AbstractOnMessageBehavior<Command> {
         if (routerActor != null && pc.isComplete()) {
             assembleJobs.put(pc.getId(), null);
             pc.setAssembledAt(LocalDateTime.now());
-            getContext().getLog().info("PC assembled by {} at {}", getContext().getSelf(), pc.getAssembledAt());
+            getContext().getLog().debug("PC assembled by {} at {}", getContext().getSelf(), pc.getAssembledAt());
             routerActor.tell(command);
         }
         return Behaviors.same();

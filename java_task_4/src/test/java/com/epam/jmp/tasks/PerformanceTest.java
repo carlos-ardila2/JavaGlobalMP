@@ -12,7 +12,7 @@ public class PerformanceTest {
     public void payrollServicePerformance() {
         PCAssemblyService service = new PCAssemblyService();
 
-        int goal = 84_000;
+        int goal = 100_000;
 
         long startTime = System.currentTimeMillis();
 
