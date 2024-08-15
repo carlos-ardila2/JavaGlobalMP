@@ -1,0 +1,10 @@
+services:
+  rabbitmq:
+    container_name: 'jmp-rabbit'
+    image: 'rabbitmq:management'
+    environment:
+      - 'RABBITMQ_DEFAULT_PASS=secret'
+      - 'RABBITMQ_DEFAULT_USER=jmp-user'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
