@@ -8,3 +8,46 @@ services:
     ports:
       - '5672:5672'
       - '15672:15672'
+  mongodb:
+    container_name: 'jmp-mongo'
+    image: 'mongodb/mongodb-community-server:7.0.7-ubi9'
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: secret
+    ports:
+      - '27017:27017'
+  grafana:
+    container_name: 'jmp-grafana'
+    image: 'grafana/grafana'
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=secret
+    ports:
+      - '3000:3000'
+
+  prometheus:
+    container_name: 'jmp-prometheus'
+    image: 'prom/prometheus'
+    volumes:
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+    ports:
+      - "9090:9090"
+
+  sender:
+    container_name: 'jmp-sender'
+    image: 'localhost:5000/micro-sender-docker:latest'
+    ports:
+      - "8081:8081"
+
+  receiver:
+    container_name: 'jmp-receiver'
+    image: 'localhost:5000/micro-recipient-docker:latest'
+    ports:
+      - "8082:8082"
+
+  collector:
+    container_name: 'jmp-collector'
+    image: 'localhost:5000/micro-collector-docker:latest'
+    ports:
+      - "8083:8083"
