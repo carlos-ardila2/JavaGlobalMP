@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 
-@FeignClient(value = "messages", url = "http://localhost:8082", path = "/api/v1/")
+@FeignClient(name = "messages", url = "${jmp.messages.recipient.url}", path = "/api/v1/")
 public interface MessagesConsumerClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/messages", produces = "application/json")

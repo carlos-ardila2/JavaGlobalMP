@@ -1,23 +1,23 @@
 <configuration>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>[%date{ISO8601}] [%level] [%logger] [%marker] [%thread] - %msg MDC: {%mdc}%n</pattern>
+            <pattern>[%date{ISO8601}] [%level] [%logger] [%marker] [%thread] - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>logs/collector.log</file>
+    <!--<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>/tmp/logs/collector.log</file>
         <encoder>
             <pattern>%logger{35} - %msg%n</pattern>
         </encoder>
     </appender>
 
     <appender name="ERROR_FILE" class="ch.qos.logback.core.FileAppender">
-        <file>logs/error.log</file>
+        <file>/tmp/logs/collector-error.log</file>
         <encoder>
             <pattern>%logger{35} - %msg%n</pattern>
         </encoder>
-    </appender>
+    </appender>-->
 
     <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
         <queueSize>8192</queueSize>
@@ -26,7 +26,7 @@
     </appender>
 
     <logger name="errorLog" level="ERROR" additivity="false">
-        <appender-ref ref="ERROR_FILE"/>
+        <appender-ref ref="ASYNC"/>
     </logger>
 
     <root level="INFO">

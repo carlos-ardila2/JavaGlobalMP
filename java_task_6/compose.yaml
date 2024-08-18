@@ -1,53 +1,97 @@
 services:
   rabbitmq:
-    container_name: 'jmp-rabbit'
+    container_name: 'jmp-rabbitmq'
     image: 'rabbitmq:management'
+    volumes:
+      - ./config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./config/definitions.json:/etc/rabbitmq/definitions.json:ro
     environment:
       - 'RABBITMQ_DEFAULT_PASS=secret'
       - 'RABBITMQ_DEFAULT_USER=jmp-user'
     ports:
       - '5672:5672'
       - '15672:15672'
+      - '15692:15692'
+    networks:
+      - sender-network
+      - recipient-network
+
   mongodb:
     container_name: 'jmp-mongo'
     image: 'mongodb/mongodb-community-server:7.0.7-ubi9'
-    restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: secret
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+      - MONGO_INITDB_DATABASE=test
     ports:
       - '27017:27017'
+    networks:
+        - recipient-network
+
   grafana:
     container_name: 'jmp-grafana'
     image: 'grafana/grafana'
-    restart: unless-stopped
+    restart: 'unless-stopped'
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=secret
     ports:
       - '3000:3000'
+    networks:
+      - monitoring-network
 
   prometheus:
     container_name: 'jmp-prometheus'
     image: 'prom/prometheus'
     volumes:
-      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+      - './config/prometheus.yml:/etc/prometheus/prometheus.yml'
     ports:
-      - "9090:9090"
+      - '9090:9090'
+    networks:
+        - recipient-network
+        - sender-network
+        - monitoring-network
 
   sender:
     container_name: 'jmp-sender'
     image: 'localhost:5000/micro-sender-docker:latest'
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
     ports:
-      - "8081:8081"
+      - '8081:8081'
+    networks:
+      - sender-network
+    depends_on:
+      - rabbitmq
 
-  receiver:
-    container_name: 'jmp-receiver'
+  recipient:
+    container_name: 'jmp-recipient'
     image: 'localhost:5000/micro-recipient-docker:latest'
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
     ports:
-      - "8082:8082"
+      - '8082:8082'
+    networks:
+      - recipient-network
+    depends_on:
+      - rabbitmq
 
   collector:
     container_name: 'jmp-collector'
     image: 'localhost:5000/micro-collector-docker:latest'
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
     ports:
-      - "8083:8083"
+      - '8083:8083'
+    networks:
+      - recipient-network
+    depends_on:
+      - mongodb
+      - recipient
+
+networks:
+    sender-network:
+      driver: bridge
+    recipient-network:
+      driver: bridge
+    monitoring-network:
+      driver: bridge

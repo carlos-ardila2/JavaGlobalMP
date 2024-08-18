@@ -23,9 +23,12 @@ public class WebController {
     @GetMapping("/messages")
     public List<MessageRecord> getMessages() {
         var pendingMessages = messagesRepository.findAll();
-        messagesRepository.deleteAll(pendingMessages);
 
-        logger.info("Extracted {} messages from temporary storage", pendingMessages.size());
+        if (!pendingMessages.isEmpty()) {
+            logger.info("Found {} messages in temporary storage", pendingMessages.size());
+            messagesRepository.deleteAll(pendingMessages);
+        }
+
         return pendingMessages;
     }
 

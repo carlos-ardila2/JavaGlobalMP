@@ -33,8 +33,6 @@ public class ScheduledTasks {
                         infoLog.info("Received message: {}: {} from {}", message.getId(), message.getMessage(), message.getRecipient()));
                 messagesRepository.saveAll(messageBatch);
             }
-        } else {
-            errorLog.error("Failed to receive messages from sender");
         }
     }
 }

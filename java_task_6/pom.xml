@@ -38,6 +38,13 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build-image-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
                     <excludes>
                         <exclude>
@@ -45,6 +52,20 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                    <docker>
+                        <host>unix:///${user.home}/.colima/docker.sock</host>
+                        <publishRegistry>
+                            <username>admin</username>
+                            <password>admin</password>
+                            <url>http://localhost:5000/v2/</url>
+                        </publishRegistry>
+                    </docker>
+                    <image>
+                        <name>${project.artifactId}-docker</name>
+                        <tags>
+                            <tag>localhost:5000/${project.artifactId}-docker:latest</tag>
+                        </tags>
+                    </image>
                 </configuration>
             </plugin>
         </plugins>
