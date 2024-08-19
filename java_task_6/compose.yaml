@@ -3,8 +3,8 @@ services:
     container_name: 'jmp-rabbitmq'
     image: 'rabbitmq:management'
     volumes:
-      - ./config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
-      - ./config/definitions.json:/etc/rabbitmq/definitions.json:ro
+      - ./config/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./config/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
     environment:
       - 'RABBITMQ_DEFAULT_PASS=secret'
       - 'RABBITMQ_DEFAULT_USER=jmp-user'
@@ -34,6 +34,8 @@ services:
     restart: 'unless-stopped'
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=secret
+    volumes:
+      - ./config/grafana:/etc/grafana/provisioning
     ports:
       - '3000:3000'
     networks:
@@ -43,7 +45,8 @@ services:
     container_name: 'jmp-prometheus'
     image: 'prom/prometheus'
     volumes:
-      - './config/prometheus.yml:/etc/prometheus/prometheus.yml'
+      - './config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml'
+      - './config/prometheus/rules.yml:/etc/prometheus/monitoring_rules.yml'
     ports:
       - '9090:9090'
     networks:
