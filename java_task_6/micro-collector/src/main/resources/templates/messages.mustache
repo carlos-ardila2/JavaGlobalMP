@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="css/mvp.css">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <title>Messages Web Site</title>
+</head>
+<body>
+<main>
+  <h1>Message List</h1>
+  <table>
+    <thead>
+    <tr>
+      <th>Recipient</th>
+      <th>Message</th>
+      <th>Received</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#messagesList}}
+      <tr>
+        <td>{{recipient}}</td>
+        <td>{{message}}</td>
+        <td>{{timestamp}}</td>
+      </tr>
+    {{/messagesList}}
+    </tbody>
+    <tfoot>
+    {{#paginatedContent}}
+    <tr>
+      <td colspan="3">
+        <nav style="margin-bottom: 0 !important;">
+        <ul>
+        {{#pageNumbers}}
+          <li><a href="/saved-messages?page={{.}}&amp;size={{pageSize}}">{{.}}</a></li>
+        {{/pageNumbers}}
+        </ul>
+        </nav>
+      </td>
+    </tr>
+    {{/paginatedContent}}
+    <tr>
+      <td colspan="3">Total messages: {{totalMessages}}</td>
+    </tr>
+    </tfoot>
+  </table>
+</main>
+</body>
+</html>

@@ -13,4 +13,7 @@ public interface MessagesConsumerClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/messages", produces = "application/json")
     ResponseEntity<List<Message>> getMessagesByFeign();
+
+    @RequestMapping(method = RequestMethod.HEAD, value = "/messages")
+    ResponseEntity<Void> getMessagesStatus();
 }

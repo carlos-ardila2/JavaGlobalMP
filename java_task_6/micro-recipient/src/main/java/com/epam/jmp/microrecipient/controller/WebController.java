@@ -4,6 +4,8 @@ import com.epam.jmp.microrecipient.repositories.MessagesRepository;
 import com.epam.jmp.microrecipient.model.MessageRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,4 +34,8 @@ public class WebController {
         return pendingMessages;
     }
 
+    @RequestMapping(value = "/messages", method = RequestMethod.HEAD)
+    public ResponseEntity<Void> getMessagesStatus() {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
