@@ -10,7 +10,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 @Component
-@RabbitListener(queues = "messages")
+@RabbitListener(id = "messagesReceiver", queues = "messages")
 public class MessagesReceiver {
 
     Logger logger = LoggerFactory.getLogger(MessagesReceiver.class);

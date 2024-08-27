@@ -30,7 +30,7 @@ public class ScheduledTasks {
                 .register(meterRegistry);
     }
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 5000)
     public void retrieveMessages() {
         try {
             var response = messagesConsumerClient.getMessagesByFeign();
